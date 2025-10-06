@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { commonServiceTags } from '../data/mockData';
 
-function CompanyForm({ initialData, onSubmit, onCancel }) {
+function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
   const [formData, setFormData] = useState({
     companyName: '',
     services: [],
@@ -389,14 +389,16 @@ function CompanyForm({ initialData, onSubmit, onCancel }) {
       <div className="flex gap-3 pt-4">
         <button
           type="submit"
-          className="flex-1 px-6 py-3 text-white bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 font-medium transition-colors"
+          disabled={isSubmitting}
+          className="flex-1 px-6 py-3 text-white bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {initialData ? 'Update Company' : 'Add Company'}
+          {isSubmitting ? 'Saving...' : (initialData ? 'Update Company' : 'Add Company')}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="px-6 py-3 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 font-medium transition-colors"
+          disabled={isSubmitting}
+          className="px-6 py-3 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancel
         </button>

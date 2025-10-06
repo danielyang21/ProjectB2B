@@ -3,9 +3,10 @@ import { useServices } from '../context/ServicesContext';
 import CompanyForm from '../components/CompanyForm';
 
 function Admin() {
-  const { services, addService, updateService, deleteService, resetToDefault } = useServices();
+  const { services, loading, error, addService, updateService, deleteService, refreshServices } = useServices();
   const [showForm, setShowForm] = useState(false);
   const [editingService, setEditingService] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddNew = () => {
     setEditingService(null);
@@ -17,31 +18,36 @@ function Admin() {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this company?')) {
-      deleteService(id);
+      try {
+        await deleteService(id);
+      } catch (error) {
+        alert('Failed to delete company: ' + error.message);
+      }
     }
   };
 
-  const handleSubmit = (formData) => {
-    if (editingService) {
-      updateService(editingService.id, formData);
-    } else {
-      addService(formData);
+  const handleSubmit = async (formData) => {
+    setIsSubmitting(true);
+    try {
+      if (editingService) {
+        await updateService(editingService.id, formData);
+      } else {
+        await addService(formData);
+      }
+      setShowForm(false);
+      setEditingService(null);
+    } catch (error) {
+      alert('Failed to save company: ' + error.message);
+    } finally {
+      setIsSubmitting(false);
     }
-    setShowForm(false);
-    setEditingService(null);
   };
 
   const handleCancel = () => {
     setShowForm(false);
     setEditingService(null);
-  };
-
-  const handleReset = () => {
-    if (window.confirm('Are you sure you want to reset to default data? This will delete all your custom entries.')) {
-      resetToDefault();
-    }
   };
 
   return (
@@ -57,19 +63,28 @@ function Admin() {
           </p>
         </div>
 
+        {/* Error Display */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            Error: {error}
+          </div>
+        )}
+
         {/* Action Buttons */}
         <div className="flex gap-3 mb-8">
           <button
             onClick={handleAddNew}
             className="px-6 py-3 text-white bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 font-medium transition-colors"
+            disabled={loading}
           >
             + Add New Company
           </button>
           <button
-            onClick={handleReset}
+            onClick={refreshServices}
             className="px-6 py-3 text-slate-700 bg-slate-200 rounded-lg hover:bg-slate-300 font-medium transition-colors"
+            disabled={loading}
           >
-            Reset to Default Data
+            {loading ? 'Refreshing...' : 'Refresh'}
           </button>
         </div>
 
@@ -83,7 +98,15 @@ function Admin() {
               initialData={editingService}
               onSubmit={handleSubmit}
               onCancel={handleCancel}
+              isSubmitting={isSubmitting}
             />
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading && services.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-slate-600">Loading companies...</p>
           </div>
         )}
 

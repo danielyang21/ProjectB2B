@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extract LocalStorage Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 400px;
+            font-family: monospace;
+            margin-top: 20px;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Extract LocalStorage Data</h1>
+    <p>Click the button below to extract your services data from localStorage:</p>
+    <button onclick="extractData()">Extract Services Data</button>
+    <textarea id="output" placeholder="Services data will appear here..."></textarea>
+
+    <script>
+        function extractData() {
+            const services = localStorage.getItem('services');
+            if (services) {
+                document.getElementById('output').value = services;
+                console.log('Services data extracted:', services);
+            } else {
+                document.getElementById('output').value = 'No services data found in localStorage';
+            }
+        }
+    </script>
+</body>
+</html>

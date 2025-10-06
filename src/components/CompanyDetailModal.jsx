@@ -5,7 +5,7 @@ function CompanyDetailModal({ company, onClose }) {
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm" onClick={onClose}>
       <div className="flex min-h-screen items-center justify-center p-4">
         <div
-          className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close Button */}
@@ -75,31 +75,31 @@ function CompanyDetailModal({ company, onClose }) {
                 </svg>
                 <span>{company.companySize} Company</span>
               </div>
+              {company.founded && (
+                <div className="flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span>Founded {company.founded}</span>
+                </div>
+              )}
+              {company.employees && (
+                <div className="flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span>{company.employees} employees</span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Body */}
-          <div className="p-8">
+          {/* Body - Scrollable */}
+          <div className="p-8 overflow-y-auto flex-1">
             {/* Description */}
             <div className="mb-8">
               <h3 className="text-lg font-semibold text-slate-900 mb-3">About</h3>
               <p className="text-slate-700 leading-relaxed">{company.description}</p>
-            </div>
-
-            {/* Company Details Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {company.founded && (
-                <div>
-                  <div className="text-sm font-medium text-slate-500 mb-1">Founded</div>
-                  <div className="text-slate-900">{company.founded}</div>
-                </div>
-              )}
-              {company.employees && (
-                <div>
-                  <div className="text-sm font-medium text-slate-500 mb-1">Employees</div>
-                  <div className="text-slate-900">{company.employees}</div>
-                </div>
-              )}
             </div>
 
             {/* Certifications */}
@@ -120,7 +120,7 @@ function CompanyDetailModal({ company, onClose }) {
             )}
 
             {/* Contact Information */}
-            <div className="mb-8">
+            <div>
               <h3 className="text-lg font-semibold text-slate-900 mb-3">Contact Information</h3>
               <div className="space-y-2">
                 {company.email && (
@@ -155,36 +155,29 @@ function CompanyDetailModal({ company, onClose }) {
                 )}
               </div>
             </div>
+          </div>
 
-            {/* Action Buttons */}
+          {/* Sticky Footer Buttons */}
+          <div className="p-6 border-t border-slate-200 bg-white rounded-b-2xl">
             <div className="flex gap-3">
-              {company.quoteUrl ? (
-                <a
-                  href={company.quoteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 px-6 py-3 text-center text-white bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 font-medium transition-colors"
-                >
-                  Request Quote
-                </a>
-              ) : company.website ? (
-                <a
-                  href={company.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 px-6 py-3 text-center text-white bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 font-medium transition-colors"
-                >
-                  Contact Company
-                </a>
-              ) : null}
               {company.website && (
                 <a
                   href={company.website}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="flex-1 px-6 py-3 text-center text-white bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 font-medium transition-colors"
+                >
+                  View Website
+                </a>
+              )}
+              {company.quoteUrl && (
+                <a
+                  href={company.quoteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex-1 px-6 py-3 text-center text-brand-blue-600 bg-brand-blue-50 border border-brand-blue-200 rounded-lg hover:bg-brand-blue-100 font-medium transition-colors"
                 >
-                  Visit Website
+                  Request Quote
                 </a>
               )}
             </div>
