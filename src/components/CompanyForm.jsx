@@ -11,6 +11,7 @@ function CompanyForm({ initialData, onSubmit, onCancel }) {
     description: '',
     rating: 4.5,
     website: '',
+    quoteUrl: '',
     email: '',
     phone: '',
     founded: '',
@@ -257,6 +258,24 @@ function CompanyForm({ initialData, onSubmit, onCancel }) {
             placeholder="https://example.com"
             className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
           />
+        </div>
+
+        {/* Quote Request URL */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">
+            Quote Request URL
+          </label>
+          <input
+            type="url"
+            name="quoteUrl"
+            value={formData.quoteUrl}
+            onChange={handleChange}
+            placeholder="https://example.com/request-quote"
+            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+          />
+          <p className="text-xs text-slate-500 mt-1">
+            Link to the company's quote request or contact page
+          </p>
         </div>
 
         {/* Email */}

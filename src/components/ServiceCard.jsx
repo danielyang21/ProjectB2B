@@ -1,6 +1,9 @@
-function ServiceCard({ service }) {
+function ServiceCard({ service, onClick }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg transition-all duration-200">
+    <div
+      className="bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg transition-all duration-200 cursor-pointer"
+      onClick={onClick}
+    >
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-slate-900 mb-2">
@@ -63,19 +66,43 @@ function ServiceCard({ service }) {
       </div>
 
       <div className="flex gap-2 mt-4">
-        {service.website && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick && onClick();
+          }}
+          className="flex-1 px-4 py-2 text-sm font-medium text-brand-blue-600 bg-brand-blue-50 border border-brand-blue-200 rounded-lg hover:bg-brand-blue-100 transition-colors text-center"
+        >
+          View Details
+        </button>
+        {service.quoteUrl ? (
+          <a
+            href={service.quoteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 px-4 py-2 text-sm font-medium text-white bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 transition-colors text-center"
+          >
+            Request Quote
+          </a>
+        ) : service.website ? (
           <a
             href={service.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 px-4 py-2 text-sm font-medium text-brand-blue-600 bg-brand-blue-50 border border-brand-blue-200 rounded-lg hover:bg-brand-blue-100 transition-colors text-center"
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 px-4 py-2 text-sm font-medium text-white bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 transition-colors text-center"
           >
-            Visit Website
+            Contact
           </a>
+        ) : (
+          <button
+            disabled
+            className="flex-1 px-4 py-2 text-sm font-medium text-slate-400 bg-slate-100 rounded-lg cursor-not-allowed text-center"
+          >
+            No Contact Info
+          </button>
         )}
-        <button className="flex-1 px-4 py-2 text-sm font-medium text-white bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 transition-colors">
-          Request Quote
-        </button>
       </div>
     </div>
   );

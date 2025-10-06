@@ -122,16 +122,28 @@ function Admin() {
                     <td className="px-6 py-4">
                       <div>
                         <div className="font-medium text-slate-900">{service.companyName}</div>
-                        {service.website && (
-                          <a
-                            href={service.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-brand-blue-600 hover:underline"
-                          >
-                            {service.website}
-                          </a>
-                        )}
+                        <div className="flex flex-col gap-0.5">
+                          {service.website && (
+                            <a
+                              href={service.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-brand-blue-600 hover:underline"
+                            >
+                              Website
+                            </a>
+                          )}
+                          {service.quoteUrl && (
+                            <a
+                              href={service.quoteUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-green-600 hover:underline"
+                            >
+                              Quote URL
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">

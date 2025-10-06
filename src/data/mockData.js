@@ -10,6 +10,7 @@ export const mockServices = [
     rating: 4.8,
     verified: true,
     website: "https://techconsultpro.com",
+    quoteUrl: "https://techconsultpro.com/request-quote",
     email: "contact@techconsultpro.com",
     phone: "(415) 555-0123",
     founded: "2015",

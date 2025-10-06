@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import FilterSidebar from '../components/FilterSidebar';
 import ServiceCard from '../components/ServiceCard';
+import CompanyDetailModal from '../components/CompanyDetailModal';
 import { useServices } from '../context/ServicesContext';
 
 function Browse() {
@@ -11,6 +12,7 @@ function Browse() {
     industry: [],
     companySize: [],
   });
+  const [selectedCompany, setSelectedCompany] = useState(null);
 
   const handleFilterChange = (category, values) => {
     setFilters(prev => ({
@@ -104,7 +106,11 @@ function Browse() {
             {filteredServices.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredServices.map(service => (
-                  <ServiceCard key={service.id} service={service} />
+                  <ServiceCard
+                    key={service.id}
+                    service={service}
+                    onClick={() => setSelectedCompany(service)}
+                  />
                 ))}
               </div>
             ) : (
@@ -131,6 +137,14 @@ function Browse() {
           </div>
         </div>
       </div>
+
+      {/* Company Detail Modal */}
+      {selectedCompany && (
+        <CompanyDetailModal
+          company={selectedCompany}
+          onClose={() => setSelectedCompany(null)}
+        />
+      )}
     </div>
   );
 }
