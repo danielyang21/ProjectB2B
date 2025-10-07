@@ -38,15 +38,15 @@ function SubmitCompanyModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-4xl w-full my-8 shadow-2xl">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white z-10">
-          <h2 className="text-2xl font-bold text-slate-900">Submit a Company</h2>
+        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-800 z-10 rounded-t-2xl">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Submit a Company</h2>
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-50"
+            className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors disabled:opacity-50"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -55,25 +55,25 @@ function SubmitCompanyModal({ isOpen, onClose }) {
         </div>
 
         {/* Content */}
-        <div className="px-6 py-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+        <div className="px-6 py-6 max-h-[calc(90vh-100px)] overflow-y-auto">
           {submitSuccess ? (
             <div className="text-center py-12">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full mb-4">
+                <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
                 Company Submitted Successfully!
               </h3>
-              <p className="text-slate-600">
+              <p className="text-slate-600 dark:text-slate-400">
                 Your submission is pending admin approval and will appear on the site once reviewed.
               </p>
             </div>
           ) : (
             <>
-              <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-blue-900">
+              <div className="mb-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <p className="text-sm text-blue-900 dark:text-blue-200">
                   <strong>Note:</strong> All company submissions will be reviewed by our admin team before appearing on the site.
                   Please provide accurate and complete information.
                 </p>

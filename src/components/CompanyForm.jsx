@@ -105,7 +105,7 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Company Name */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Company Name *
           </label>
           <input
@@ -114,13 +114,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             value={formData.companyName}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
           />
         </div>
 
         {/* Services Tags */}
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Services * (Type and press Enter, or select from suggestions)
           </label>
 
@@ -129,13 +129,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             {formData.services.map((service) => (
               <span
                 key={service}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-brand-blue-100 text-brand-blue-800 rounded-full text-sm"
+                className="inline-flex items-center gap-1 px-3 py-1 bg-brand-blue-100 dark:bg-brand-blue-900/30 text-brand-blue-800 dark:text-brand-blue-300 rounded-full text-sm"
               >
                 {service}
                 <button
                   type="button"
                   onClick={() => removeService(service)}
-                  className="hover:text-brand-blue-900"
+                  className="hover:text-brand-blue-900 dark:hover:text-brand-blue-200"
                 >
                   ×
                 </button>
@@ -153,18 +153,18 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
               onFocus={() => setShowSuggestions(serviceInput.length > 0)}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               placeholder="Type a service... (e.g., IT Consulting, Cybersecurity)"
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
             />
 
             {/* Suggestions Dropdown */}
             {showSuggestions && filteredSuggestions.length > 0 && (
-              <div className="absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+              <div className="absolute z-10 w-full mt-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                 {filteredSuggestions.map((suggestion) => (
                   <button
                     key={suggestion}
                     type="button"
                     onClick={() => addService(suggestion)}
-                    className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm"
+                    className="w-full px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700 text-sm text-slate-900 dark:text-white"
                   >
                     {suggestion}
                   </button>
@@ -174,13 +174,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
           </div>
 
           {formData.services.length === 0 && (
-            <p className="text-xs text-red-600 mt-1">At least one service is required</p>
+            <p className="text-xs text-red-600 dark:text-red-400 mt-1">At least one service is required</p>
           )}
         </div>
 
         {/* Industry */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Industry *
           </label>
           <input
@@ -190,13 +190,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             onChange={handleChange}
             required
             placeholder="e.g., Technology"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* Location */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Location *
           </label>
           <input
@@ -206,13 +206,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             onChange={handleChange}
             required
             placeholder="e.g., San Francisco, CA"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* Company Size */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Company Size *
           </label>
           <select
@@ -220,7 +220,7 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             value={formData.companySize}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           >
             <option value="Small">Small</option>
             <option value="Medium">Medium</option>
@@ -230,7 +230,7 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
 
         {/* Rating */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Rating (1-5)
           </label>
           <input
@@ -241,13 +241,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             min="1"
             max="5"
             step="0.1"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* Website */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Website
           </label>
           <input
@@ -256,13 +256,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             value={formData.website}
             onChange={handleChange}
             placeholder="https://example.com"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* Quote Request URL */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Quote Request URL
           </label>
           <input
@@ -271,7 +271,7 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             value={formData.quoteUrl}
             onChange={handleChange}
             placeholder="https://example.com/request-quote"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
           <p className="text-xs text-slate-500 mt-1">
             Link to the company's quote request or contact page
@@ -280,7 +280,7 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Email
           </label>
           <input
@@ -289,13 +289,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             value={formData.email}
             onChange={handleChange}
             placeholder="contact@example.com"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* Phone */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Phone
           </label>
           <input
@@ -304,13 +304,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             value={formData.phone}
             onChange={handleChange}
             placeholder="(555) 123-4567"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* Founded */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Founded Year
           </label>
           <input
@@ -319,13 +319,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             value={formData.founded}
             onChange={handleChange}
             placeholder="2015"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* Employees */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             Employee Count
           </label>
           <input
@@ -334,13 +334,13 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             value={formData.employees}
             onChange={handleChange}
             placeholder="50-100"
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         {/* LinkedIn */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
             LinkedIn URL
           </label>
           <input
@@ -349,7 +349,7 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
             value={formData.linkedin}
             onChange={handleChange}
             placeholder="https://linkedin.com/company/..."
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
       </div>
@@ -366,7 +366,7 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
           required
           rows={3}
           placeholder="Brief description of the company and services offered..."
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+          className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
         />
       </div>
 
@@ -381,7 +381,7 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
           value={formData.certifications}
           onChange={handleChange}
           placeholder="ISO 27001, SOC 2, HIPAA"
-          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent"
+          className="w-full px-4 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder:text-slate-400 dark:placeholder:text-slate-500"
         />
       </div>
 
@@ -398,7 +398,7 @@ function CompanyForm({ initialData, onSubmit, onCancel, isSubmitting }) {
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="px-6 py-3 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-3 text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancel
         </button>

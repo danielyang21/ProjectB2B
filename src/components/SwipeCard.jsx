@@ -1,11 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getMatchLevel } from '../utils/aiMatcher';
 
-function SwipeCard({ company, onSwipe, style, zIndex, showMatchPercentage = true }) {
+function SwipeCard({ company, onSwipe, style, zIndex, showMatchPercentage = true, triggerSwipe = null }) {
   const matchLevel = getMatchLevel(company.matchScore || 0);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isSwipingAway, setIsSwipingAway] = useState(false);
+  const [swipeDirection, setSwipeDirection] = useState(null);
+
+  // Handle button-triggered swipes
+  useEffect(() => {
+    if (triggerSwipe) {
+      setSwipeDirection(triggerSwipe);
+      setIsSwipingAway(true);
+
+      setTimeout(() => {
+        onSwipe(triggerSwipe);
+      }, 300);
+    }
+  }, [triggerSwipe, onSwipe]);
 
   const handleDragStart = (clientX, clientY) => {
     setIsDragging(true);
@@ -19,6 +33,17 @@ function SwipeCard({ company, onSwipe, style, zIndex, showMatchPercentage = true
       x: clientX - dragStart.x,
       y: clientY - dragStart.y
     };
+
+    // Apply elastic resistance when dragging beyond threshold
+    const maxDrag = 300;
+    const resistance = 0.5;
+
+    if (Math.abs(offset.x) > maxDrag) {
+      const excess = Math.abs(offset.x) - maxDrag;
+      const sign = offset.x > 0 ? 1 : -1;
+      offset.x = sign * (maxDrag + excess * resistance);
+    }
+
     setDragOffset(offset);
   };
 
@@ -30,10 +55,16 @@ function SwipeCard({ company, onSwipe, style, zIndex, showMatchPercentage = true
     const swipeThreshold = 100;
     if (Math.abs(dragOffset.x) > swipeThreshold) {
       const direction = dragOffset.x > 0 ? 'right' : 'left';
-      onSwipe(direction);
-    }
+      setSwipeDirection(direction);
+      setIsSwipingAway(true);
 
-    setDragOffset({ x: 0, y: 0 });
+      // Wait for animation to complete before calling onSwipe
+      setTimeout(() => {
+        onSwipe(direction);
+      }, 300);
+    } else {
+      setDragOffset({ x: 0, y: 0 });
+    }
   };
 
   // Mouse events
@@ -67,11 +98,15 @@ function SwipeCard({ company, onSwipe, style, zIndex, showMatchPercentage = true
   const rotation = dragOffset.x * 0.1;
   const opacity = 1 - Math.abs(dragOffset.x) / 300;
 
+  // Calculate flyaway position if swiping away
+  const flyawayX = isSwipingAway ? (swipeDirection === 'right' ? 1000 : -1000) : dragOffset.x;
+  const flyawayRotation = isSwipingAway ? (swipeDirection === 'right' ? 30 : -30) : rotation;
+
   const cardStyle = {
     ...style,
-    transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${rotation}deg)`,
-    opacity: isDragging ? opacity : 1,
-    transition: isDragging ? 'none' : 'all 0.3s ease',
+    transform: `translate(${flyawayX}px, ${dragOffset.y}px) rotate(${flyawayRotation}deg)`,
+    opacity: isSwipingAway ? 0 : (isDragging ? opacity : 1),
+    transition: isSwipingAway ? 'all 0.3s cubic-bezier(0.4, 0, 1, 1)' : (isDragging ? 'none' : 'all 0.3s ease'),
     cursor: isDragging ? 'grabbing' : 'grab',
     zIndex
   };
@@ -92,18 +127,28 @@ function SwipeCard({ company, onSwipe, style, zIndex, showMatchPercentage = true
       onTouchEnd={handleTouchEnd}
     >
       <div className="w-full h-full bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 relative">
-        {/* Like/Pass Overlays */}
+        {/* Like/Pass Overlays - Glassmorphism Style */}
         {showLikeOverlay && (
-          <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center z-10">
-            <div className="text-6xl font-bold text-green-600 border-8 border-green-600 rounded-2xl px-8 py-4 rotate-12">
-              LIKE
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+            <div className="backdrop-blur-xl bg-green-500/20 dark:bg-green-400/20 border-4 border-green-500/60 dark:border-green-400/60 rounded-3xl px-12 py-6 rotate-12 shadow-2xl">
+              <div className="flex items-center gap-3">
+                <svg className="w-12 h-12 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                </svg>
+                <span className="text-5xl font-bold text-green-600 dark:text-green-400">LIKE</span>
+              </div>
             </div>
           </div>
         )}
         {showPassOverlay && (
-          <div className="absolute inset-0 bg-red-500/20 flex items-center justify-center z-10">
-            <div className="text-6xl font-bold text-red-600 border-8 border-red-600 rounded-2xl px-8 py-4 -rotate-12">
-              PASS
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+            <div className="backdrop-blur-xl bg-red-500/20 dark:bg-red-400/20 border-4 border-red-500/60 dark:border-red-400/60 rounded-3xl px-12 py-6 -rotate-12 shadow-2xl">
+              <div className="flex items-center gap-3">
+                <svg className="w-12 h-12 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+                <span className="text-5xl font-bold text-red-600 dark:text-red-400">PASS</span>
+              </div>
             </div>
           </div>
         )}

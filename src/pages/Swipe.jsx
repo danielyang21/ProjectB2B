@@ -11,6 +11,7 @@ function Swipe() {
   const { userPreferences, matchedCompanies, swipedCompanies, addMatch, addPass } = useMatch();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
+  const [buttonSwipeTrigger, setButtonSwipeTrigger] = useState(null);
   const previousSwipedCount = useRef(0);
   const hasInitialized = useRef(false);
 
@@ -120,7 +121,11 @@ function Swipe() {
   };
 
   const handleButtonSwipe = (direction) => {
-    handleSwipe(direction);
+    setButtonSwipeTrigger(direction);
+    // Reset trigger after a short delay
+    setTimeout(() => {
+      setButtonSwipeTrigger(null);
+    }, 350);
   };
 
   if (!userPreferences) {
@@ -206,6 +211,7 @@ function Swipe() {
                 key={company.id}
                 company={company}
                 onSwipe={isTop ? handleSwipe : () => {}}
+                triggerSwipe={isTop ? buttonSwipeTrigger : null}
                 zIndex={cardsToShow.length - idx}
                 showMatchPercentage={isAIMatched}
                 style={{
@@ -217,28 +223,34 @@ function Swipe() {
           })}
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons - Glassmorphism Style */}
         <div className="flex justify-center gap-8 mt-8">
           <button
             onClick={() => handleButtonSwipe('left')}
-            className="w-16 h-16 rounded-full bg-white dark:bg-slate-800 border-4 border-red-500 text-red-500 flex items-center justify-center text-3xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all hover:scale-110 shadow-lg"
+            className="group w-20 h-20 rounded-full backdrop-blur-xl bg-white/60 dark:bg-slate-800/60 border-2 border-red-500/40 dark:border-red-400/40 shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-red-500/80 dark:hover:border-red-400/80"
             aria-label="Pass"
           >
-            ✕
+            <svg className="w-8 h-8 text-red-500 dark:text-red-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
           </button>
           <button
             onClick={() => navigate('/matches')}
-            className="w-16 h-16 rounded-full bg-white dark:bg-slate-800 border-4 border-brand-blue-500 text-brand-blue-500 flex items-center justify-center text-2xl hover:bg-brand-blue-50 dark:hover:bg-brand-blue-900/20 transition-all hover:scale-110 shadow-lg"
+            className="group w-20 h-20 rounded-full backdrop-blur-xl bg-white/60 dark:bg-slate-800/60 border-2 border-brand-blue-500/40 dark:border-brand-blue-400/40 shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-brand-blue-500/80 dark:hover:border-brand-blue-400/80"
             aria-label="View Matches"
           >
-            ★
+            <svg className="w-8 h-8 text-brand-blue-500 dark:text-brand-blue-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
           </button>
           <button
             onClick={() => handleButtonSwipe('right')}
-            className="w-16 h-16 rounded-full bg-white dark:bg-slate-800 border-4 border-green-500 text-green-500 flex items-center justify-center text-3xl hover:bg-green-50 dark:hover:bg-green-900/20 transition-all hover:scale-110 shadow-lg"
+            className="group w-20 h-20 rounded-full backdrop-blur-xl bg-white/60 dark:bg-slate-800/60 border-2 border-green-500/40 dark:border-green-400/40 shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-green-500/80 dark:hover:border-green-400/80"
             aria-label="Like"
           >
-            ♥
+            <svg className="w-8 h-8 text-green-500 dark:text-green-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+            </svg>
           </button>
         </div>
 

@@ -1,11 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import SubmitCompanyModal from './SubmitCompanyModal';
 
-function Navbar() {
+function Navbar({ onOpenSubmitModal }) {
   const { darkMode, toggleDarkMode } = useTheme();
-  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 transition-colors">
@@ -60,7 +57,7 @@ function Navbar() {
             </button>
 
             <button
-              onClick={() => setIsSubmitModalOpen(true)}
+              onClick={onOpenSubmitModal}
               className="px-5 py-2 text-sm font-medium text-white bg-brand-blue-600 dark:bg-brand-blue-600 rounded-lg hover:bg-brand-blue-700 dark:hover:bg-brand-blue-700 transition-all duration-200"
             >
               Submit Company
@@ -68,12 +65,6 @@ function Navbar() {
           </div>
         </div>
       </div>
-
-      {/* Submit Company Modal */}
-      <SubmitCompanyModal
-        isOpen={isSubmitModalOpen}
-        onClose={() => setIsSubmitModalOpen(false)}
-      />
     </nav>
   );
 }

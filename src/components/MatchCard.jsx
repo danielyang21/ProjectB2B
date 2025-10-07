@@ -21,17 +21,17 @@ function MatchCard({ service, onClick }) {
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2 group-hover:text-brand-blue-600 dark:group-hover:text-brand-blue-400 transition-colors duration-200">
             {service.companyName}
           </h3>
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1 h-[44px]">
             {service.services?.slice(0, 2).map((svc, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-blue-50 dark:bg-brand-blue-900/30 text-brand-blue-700 dark:text-brand-blue-300 border border-brand-blue-200 dark:border-brand-blue-700"
+                className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-blue-50 dark:bg-brand-blue-900/30 text-brand-blue-700 dark:text-brand-blue-300 border border-brand-blue-200 dark:border-brand-blue-700 h-fit"
               >
                 {svc}
               </span>
             ))}
             {service.services?.length > 2 && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium text-slate-600">
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium text-slate-600 dark:text-slate-400 h-fit">
                 +{service.services.length - 2} more
               </span>
             )}
