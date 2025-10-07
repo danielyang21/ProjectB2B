@@ -23,6 +23,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routes
 app.use('/api/services', require('./routes/serviceRoutes'));
+app.use('/api/ai', require('./routes/aiRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 
 // Health check route
 app.get('/health', (req, res) => {

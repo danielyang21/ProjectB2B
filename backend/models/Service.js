@@ -91,6 +91,10 @@ const serviceSchema = new mongoose.Schema({
   linkedin: {
     type: String,
     trim: true
+  },
+  approved: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true
@@ -101,5 +105,6 @@ serviceSchema.index({ companyName: 'text', description: 'text', services: 'text'
 serviceSchema.index({ industry: 1 });
 serviceSchema.index({ companySize: 1 });
 serviceSchema.index({ verified: 1 });
+serviceSchema.index({ approved: 1 });
 
 module.exports = mongoose.model('Service', serviceSchema);

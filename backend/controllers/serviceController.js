@@ -13,8 +13,8 @@ exports.getAllServices = async (req, res) => {
       verified
     } = req.query;
 
-    // Build query
-    let query = {};
+    // Build query - only show approved companies to public
+    let query = { approved: true };
 
     // Search across multiple fields
     if (search) {
@@ -169,6 +169,219 @@ exports.deleteService = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// @desc    Submit a new company (pending approval)
+// @route   POST /api/services/submit
+// @access  Public
+exports.submitService = async (req, res) => {
+  try {
+    // Create service with approved: false by default
+    const service = await Service.create({
+      ...req.body,
+      approved: false
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Company submitted successfully and is pending approval',
+      data: service
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'Invalid data provided',
+      error: error.message
+    });
+  }
+};
+
+// ========== ADMIN ONLY ENDPOINTS ==========
+
+// @desc    Get all services including unapproved (Admin only)
+// @route   GET /api/services/admin/all
+// @access  Private/Admin
+exports.getAllServicesAdmin = async (req, res) => {
+  try {
+    const {
+      search,
+      services,
+      industry,
+      companySize,
+      verified,
+      approved
+    } = req.query;
+
+    // Build query - no approved filter for admin
+    let query = {};
+
+    // Filter by approval status
+    if (approved !== undefined) {
+      query.approved = approved === 'true';
+    }
+
+    // Search across multiple fields
+    if (search) {
+      query.$or = [
+        { companyName: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { location: { $regex: search, $options: 'i' } },
+        { services: { $in: [new RegExp(search, 'i')] } }
+      ];
+    }
+
+    // Filter by services (comma-separated)
+    if (services) {
+      const serviceArray = services.split(',');
+      query.services = { $in: serviceArray };
+    }
+
+    // Filter by industry (comma-separated)
+    if (industry) {
+      const industryArray = industry.split(',');
+      query.industry = { $in: industryArray };
+    }
+
+    // Filter by company size (comma-separated)
+    if (companySize) {
+      const sizeArray = companySize.split(',');
+      query.companySize = { $in: sizeArray };
+    }
+
+    // Filter by verified status
+    if (verified !== undefined) {
+      query.verified = verified === 'true';
+    }
+
+    const allServices = await Service.find(query).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: allServices.length,
+      data: allServices
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// @desc    Get pending services (Admin only)
+// @route   GET /api/services/admin/pending
+// @access  Private/Admin
+exports.getPendingServices = async (req, res) => {
+  try {
+    const pendingServices = await Service.find({ approved: false }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: pendingServices.length,
+      data: pendingServices
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// @desc    Approve service (Admin only)
+// @route   PUT /api/services/admin/:id/approve
+// @access  Private/Admin
+exports.approveService = async (req, res) => {
+  try {
+    const service = await Service.findByIdAndUpdate(
+      req.params.id,
+      { approved: true },
+      { new: true, runValidators: true }
+    );
+
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Service approved successfully',
+      data: service
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// @desc    Reject/Delete service (Admin only)
+// @route   DELETE /api/services/admin/:id
+// @access  Private/Admin
+exports.deleteServiceAdmin = async (req, res) => {
+  try {
+    const service = await Service.findByIdAndDelete(req.params.id);
+
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Service deleted successfully',
+      data: {}
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// @desc    Update service (Admin only)
+// @route   PUT /api/services/admin/:id
+// @access  Private/Admin
+exports.updateServiceAdmin = async (req, res) => {
+  try {
+    const service = await Service.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: service
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'Invalid data provided',
       error: error.message
     });
   }

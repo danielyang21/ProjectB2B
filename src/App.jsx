@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Browse from './pages/Browse';
 import Admin from './pages/Admin';
+import AdminLogin from './pages/AdminLogin';
 import Quiz from './pages/Quiz';
 import Swipe from './pages/Swipe';
 import Matches from './pages/Matches';
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/browse" element={<Browse />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/swipe" element={<Swipe />} />
           <Route path="/matches" element={<Matches />} />

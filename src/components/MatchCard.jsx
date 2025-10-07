@@ -1,32 +1,44 @@
-function ServiceCard({ service, onClick }) {
+import { getMatchLevel } from '../utils/aiMatcher';
+
+function MatchCard({ service, onClick }) {
+  const matchLevel = getMatchLevel(service.matchScore || 0);
+
   return (
     <div
-      className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1 hover:border-brand-blue-300 dark:hover:border-brand-blue-500 transition-all duration-300 cursor-pointer group"
+      className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1 hover:border-brand-blue-300 dark:hover:border-brand-blue-500 transition-all duration-300 cursor-pointer group relative"
       onClick={onClick}
     >
+      {/* Match Score Badge - Top Right Corner */}
+      <div className="absolute -top-3 -right-3 z-10">
+        <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold shadow-lg ${matchLevel.bgColor} ${matchLevel.textColor} border-2 ${matchLevel.borderColor}`}>
+          <span className="mr-1">{matchLevel.emoji}</span>
+          <span>{service.matchScore}%</span>
+        </div>
+      </div>
+
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2 group-hover:text-brand-blue-600 dark:group-hover:text-brand-blue-400 transition-colors duration-200">
             {service.companyName}
           </h3>
-          <div className="flex flex-wrap gap-1 h-[44px]">
+          <div className="flex flex-wrap gap-1">
             {service.services?.slice(0, 2).map((svc, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-blue-50 dark:bg-brand-blue-900/30 text-brand-blue-700 dark:text-brand-blue-300 border border-brand-blue-200 dark:border-brand-blue-700 h-fit"
+                className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-blue-50 dark:bg-brand-blue-900/30 text-brand-blue-700 dark:text-brand-blue-300 border border-brand-blue-200 dark:border-brand-blue-700"
               >
                 {svc}
               </span>
             ))}
             {service.services?.length > 2 && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium text-slate-600 dark:text-slate-400 h-fit">
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium text-slate-600">
                 +{service.services.length - 2} more
               </span>
             )}
           </div>
         </div>
         {service.verified && (
-          <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-full border border-green-200 dark:border-green-800">
+          <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-full border border-green-200 dark:border-green-800 ml-2">
             <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
@@ -100,4 +112,4 @@ function ServiceCard({ service, onClick }) {
   );
 }
 
-export default ServiceCard;
+export default MatchCard;

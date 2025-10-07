@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { getMatchLevel } from '../utils/aiMatcher';
 
-function SwipeCard({ company, onSwipe, style, zIndex }) {
+function SwipeCard({ company, onSwipe, style, zIndex, showMatchPercentage = true }) {
+  const matchLevel = getMatchLevel(company.matchScore || 0);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -114,11 +116,20 @@ function SwipeCard({ company, onSwipe, style, zIndex }) {
               <h2 className="text-4xl font-bold text-slate-900 dark:text-white">
                 {company.companyName}
               </h2>
-              {company.verified && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800">
-                  ✓ Verified
-                </span>
-              )}
+              <div className="flex flex-col gap-2 items-end">
+                {/* Match Score Badge - shown when AI matching or quiz-based */}
+                {showMatchPercentage && company.matchScore !== undefined && (
+                  <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold ${matchLevel.bgColor} ${matchLevel.textColor} border ${matchLevel.borderColor}`}>
+                    <span className="mr-1">{matchLevel.emoji}</span>
+                    <span>{company.matchScore}% Match</span>
+                  </div>
+                )}
+                {company.verified && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800">
+                    ✓ Verified
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center gap-4 text-slate-600 dark:text-slate-400 mb-3">
@@ -135,6 +146,16 @@ function SwipeCard({ company, onSwipe, style, zIndex }) {
             <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
               {company.description}
             </p>
+
+            {/* AI Match Reason */}
+            {company.matchReason && (
+              <div className="mt-4 p-3 bg-brand-blue-50 dark:bg-brand-blue-900/20 border border-brand-blue-200 dark:border-brand-blue-800 rounded-lg">
+                <p className="text-sm text-slate-700 dark:text-slate-300">
+                  <span className="font-semibold text-brand-blue-700 dark:text-brand-blue-400">Why this match: </span>
+                  {company.matchReason}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Services */}

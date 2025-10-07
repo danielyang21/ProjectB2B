@@ -43,8 +43,8 @@ function FilterSidebar({ filters, onFilterChange }) {
     (filters.companySize?.length > 0);
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
-      <div className="p-6 sticky top-0 bg-white dark:bg-slate-800 z-10 border-b border-slate-100 dark:border-slate-700">
+    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 sticky top-24">
+      <div className="p-6 bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Filters</h3>
           {hasActiveFilters && (
@@ -72,7 +72,13 @@ function FilterSidebar({ filters, onFilterChange }) {
             className="w-full px-3 py-2 mb-3 text-sm bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent placeholder-slate-400 dark:placeholder-slate-500"
           />
 
-          <div className="space-y-2 max-h-60 overflow-y-auto">
+          <div
+            className="space-y-2 max-h-48 overflow-y-auto pr-2 filter-scrollbar"
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#60a5fa transparent'
+            }}
+          >
             {filteredServices.length > 0 ? (
               filteredServices.map((service) => (
                 <label key={service} className="flex items-center cursor-pointer group">

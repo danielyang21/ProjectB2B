@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useServices } from '../context/ServicesContext';
 import { useMatch } from '../context/MatchContext';
 import SwipeCard from '../components/SwipeCard';
+import { calculateMatchScore, sortByMatchScore } from '../utils/aiMatcher';
 
 function Swipe() {
   const navigate = useNavigate();
   const { services, loading } = useServices();
-  const { userPreferences, swipedCompanies, addMatch, addPass } = useMatch();
+  const { userPreferences, matchedCompanies, swipedCompanies, addMatch, addPass } = useMatch();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const previousSwipedCount = useRef(0);
@@ -20,52 +21,71 @@ function Swipe() {
       return;
     }
 
-    // Filter companies based on preferences and exclude already swiped ones
-    let filtered = services.filter(service => {
-      // Exclude already swiped companies
-      if (swipedCompanies.liked.includes(service.id) ||
-          swipedCompanies.passed.includes(service.id)) {
-        return false;
-      }
+    let filtered = [];
 
-      // Filter by service type if specified
-      if (userPreferences.serviceType && userPreferences.serviceType !== 'other') {
-        const serviceTypeMap = {
-          'communications': ['UCaaS', 'VoIP', 'Communications', 'Phone Systems'],
-          'marketing': ['Marketing', 'Growth', 'CRM', 'Analytics'],
-          'it-consulting': ['IT', 'Consulting', 'Technology', 'Software Development'],
-          'hr': ['HR', 'Recruiting', 'Talent', 'Payroll'],
-          'finance': ['Finance', 'Accounting', 'Payments', 'Invoicing']
-        };
-
-        const keywords = serviceTypeMap[userPreferences.serviceType] || [];
-        const hasMatchingService = service.services?.some(svc =>
-          keywords.some(keyword => svc.toLowerCase().includes(keyword.toLowerCase()))
-        ) || keywords.some(keyword =>
-          service.industry?.toLowerCase().includes(keyword.toLowerCase())
-        );
-
-        if (!hasMatchingService) return false;
-      }
-
-      // Filter by company size
-      if (userPreferences.companySize) {
-        if (service.companySize !== userPreferences.companySize) {
+    // If AI-matched companies exist (from prompt), use those
+    if (matchedCompanies && matchedCompanies.length > 0) {
+      filtered = matchedCompanies
+        .filter(company => {
+          // Exclude already swiped companies
+          if (swipedCompanies.liked.includes(company.id || company._id) ||
+              swipedCompanies.passed.includes(company.id || company._id)) {
+            return false;
+          }
+          return true;
+        })
+        .map(company => ({
+          ...company,
+          id: company.id || company._id,
+          matchScore: company.matchPercentage || 0
+        }));
+    } else {
+      // Fallback to quiz-based filtering (original logic)
+      filtered = services.filter(service => {
+        // Exclude already swiped companies
+        if (swipedCompanies.liked.includes(service.id) ||
+            swipedCompanies.passed.includes(service.id)) {
           return false;
         }
-      }
 
-      return true;
-    });
+        // Filter by service type if specified
+        if (userPreferences.serviceType && userPreferences.serviceType !== 'other') {
+          const serviceTypeMap = {
+            'communications': ['UCaaS', 'VoIP', 'Communications', 'Phone Systems'],
+            'marketing': ['Marketing', 'Growth', 'CRM', 'Analytics'],
+            'it-consulting': ['IT', 'Consulting', 'Technology', 'Software Development'],
+            'hr': ['HR', 'Recruiting', 'Talent', 'Payroll'],
+            'finance': ['Finance', 'Accounting', 'Payments', 'Invoicing']
+          };
 
-    // Sort by priority
-    if (userPreferences.priority === 'price') {
-      // In a real app, you'd have pricing data
-      filtered = filtered.sort((a, b) => a.rating - b.rating);
-    } else if (userPreferences.priority === 'reputation') {
-      filtered = filtered.sort((a, b) => b.rating - a.rating);
-    } else if (userPreferences.priority === 'support') {
-      filtered = filtered.sort((a, b) => (b.verified ? 1 : 0) - (a.verified ? 1 : 0));
+          const keywords = serviceTypeMap[userPreferences.serviceType] || [];
+          const hasMatchingService = service.services?.some(svc =>
+            keywords.some(keyword => svc.toLowerCase().includes(keyword.toLowerCase()))
+          ) || keywords.some(keyword =>
+            service.industry?.toLowerCase().includes(keyword.toLowerCase())
+          );
+
+          if (!hasMatchingService) return false;
+        }
+
+        // Filter by company size
+        if (userPreferences.companySize) {
+          if (service.companySize !== userPreferences.companySize) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      // Calculate match scores for quiz-based results
+      filtered = filtered.map(company => ({
+        ...company,
+        matchScore: calculateMatchScore(userPreferences, company)
+      }));
+
+      // Sort by match score (highest first)
+      filtered = sortByMatchScore(filtered);
     }
 
     const totalSwiped = swipedCompanies.liked.length + swipedCompanies.passed.length;
@@ -74,22 +94,20 @@ function Swipe() {
     setFilteredCompanies(filtered);
 
     // Always keep currentIndex at 0 since we filter out swiped cards
-    // The "current" card is always the first one in the filtered array
     setCurrentIndex(0);
 
-    // Only auto-navigate if we just swiped (not on initial load or navigation)
-    // and we've already initialized (to prevent redirect on mount)
+    // Only auto-navigate if we just swiped and we've already initialized
     if (hasInitialized.current && justSwiped && filtered.length === 0) {
       navigate('/matches');
     }
 
     // Mark as initialized after first render
-    if (!hasInitialized.current && services.length > 0) {
+    if (!hasInitialized.current && (services.length > 0 || matchedCompanies.length > 0)) {
       hasInitialized.current = true;
     }
 
     previousSwipedCount.current = totalSwiped;
-  }, [services, userPreferences, swipedCompanies, navigate]);
+  }, [services, userPreferences, matchedCompanies, swipedCompanies, navigate]);
 
   const handleSwipe = (direction) => {
     const currentCompany = filteredCompanies[currentIndex];
@@ -99,10 +117,6 @@ function Swipe() {
     } else {
       addPass(currentCompany.id);
     }
-
-    // Don't increment currentIndex - the useEffect will re-filter and
-    // remove the swiped card, so the next card becomes index 0
-    // The filtering happens automatically when swipedCompanies updates
   };
 
   const handleButtonSwipe = (direction) => {
@@ -114,7 +128,7 @@ function Swipe() {
   }
 
   // Show loading state while services are being fetched
-  if (loading) {
+  if (loading && matchedCompanies.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors pt-20">
         <div className="max-w-2xl mx-auto px-4 py-20 text-center">
@@ -148,18 +162,36 @@ function Swipe() {
 
   const cardsToShow = filteredCompanies.slice(currentIndex, currentIndex + 3);
   const remaining = filteredCompanies.length - currentIndex;
+  const isAIMatched = matchedCompanies && matchedCompanies.length > 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors pt-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
             Find Your Perfect Match
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
             {remaining} {remaining === 1 ? 'company' : 'companies'} remaining
           </p>
+
+          {/* Show user's prompt if AI-matched */}
+          {isAIMatched && userPreferences.prompt && (
+            <div className="mt-4 max-w-2xl mx-auto">
+              <div className="bg-brand-blue-50 dark:bg-brand-blue-900/20 border border-brand-blue-200 dark:border-brand-blue-800 rounded-lg p-4">
+                <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">
+                  <span className="font-semibold">Your search:</span> "{userPreferences.prompt}"
+                </p>
+                <button
+                  onClick={() => navigate('/quiz')}
+                  className="text-sm text-brand-blue-600 dark:text-brand-blue-400 hover:text-brand-blue-700 dark:hover:text-brand-blue-300 font-medium"
+                >
+                  Edit search →
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Card Stack */}
@@ -175,6 +207,7 @@ function Swipe() {
                 company={company}
                 onSwipe={isTop ? handleSwipe : () => {}}
                 zIndex={cardsToShow.length - idx}
+                showMatchPercentage={isAIMatched}
                 style={{
                   transform: `scale(${scale}) translateY(${yOffset}px)`,
                   pointerEvents: isTop ? 'auto' : 'none'

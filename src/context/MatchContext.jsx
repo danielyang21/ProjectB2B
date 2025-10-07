@@ -5,6 +5,7 @@ const MatchContext = createContext();
 export function MatchProvider({ children }) {
   const [userPreferences, setUserPreferences] = useState(null);
   const [matches, setMatches] = useState([]);
+  const [matchedCompanies, setMatchedCompanies] = useState([]); // AI-matched companies from prompt
   const [swipedCompanies, setSwipedCompanies] = useState({
     liked: [],
     passed: []
@@ -55,6 +56,8 @@ export function MatchProvider({ children }) {
       userPreferences,
       setUserPreferences,
       matches,
+      matchedCompanies,
+      setMatchedCompanies,
       addMatch,
       addPass,
       swipedCompanies,

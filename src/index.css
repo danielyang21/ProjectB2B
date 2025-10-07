@@ -13,3 +13,23 @@
     overscroll-behavior: none;
   }
 }
+
+@layer utilities {
+  /* Custom scrollbar styles for webkit browsers */
+  .filter-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .filter-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .filter-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-brand-blue-400/60 dark:bg-brand-blue-500/60 rounded-full;
+    transition: background-color 0.2s;
+  }
+
+  .filter-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-brand-blue-500 dark:bg-brand-blue-400;
+  }
+}
