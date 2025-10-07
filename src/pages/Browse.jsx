@@ -50,14 +50,14 @@ function Browse() {
   }, [searchQuery, filters, services]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 pt-20 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-semibold text-slate-900 mb-2">
+          <h1 className="text-4xl font-semibold text-slate-900 dark:text-white mb-2">
             Browse Services
           </h1>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-slate-600 dark:text-slate-300">
             Discover verified B2B service providers tailored to your needs
           </p>
         </div>
@@ -70,7 +70,7 @@ function Browse() {
               placeholder="Search by company, service, or location..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-5 py-4 pr-12 text-slate-900 placeholder-slate-400 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent shadow-sm"
+              className="w-full px-5 py-4 pr-12 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-blue-500 focus:border-transparent shadow-sm"
             />
             <svg
               className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"
@@ -98,8 +98,8 @@ function Browse() {
           {/* Results Grid */}
           <div className="lg:col-span-3">
             <div className="flex items-center justify-between mb-6">
-              <p className="text-sm text-slate-600">
-                <span className="font-semibold text-slate-900">{filteredServices.length}</span> services found
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                <span className="font-semibold text-slate-900 dark:text-white">{filteredServices.length}</span> services found
               </p>
             </div>
 
