@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import CompanyForm from './CompanyForm';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function SubmitCompanyModal({ isOpen, onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -8,7 +10,7 @@ function SubmitCompanyModal({ isOpen, onClose }) {
   const handleSubmit = async (formData) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch('http://localhost:5000/api/services/submit', {
+      const response = await fetch(`${API_URL}/api/services/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

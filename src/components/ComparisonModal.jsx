@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { getMatchLevel } from '../utils/aiMatcher';
 import { useMatch } from '../context/MatchContext';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function ComparisonModal({ companies, onClose }) {
   const { userPreferences } = useMatch();
   const [aiInsights, setAiInsights] = useState(null);
@@ -12,7 +14,7 @@ function ComparisonModal({ companies, onClose }) {
     const fetchAIInsights = async () => {
       try {
         setLoadingAI(true);
-        const response = await fetch('http://localhost:5000/api/ai/compare', {
+        const response = await fetch(`${API_URL}/api/ai/compare`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

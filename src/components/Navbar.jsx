@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 function Navbar({ onOpenSubmitModal }) {
   const { darkMode, toggleDarkMode } = useTheme();
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 transition-colors">
@@ -62,6 +64,35 @@ function Navbar({ onOpenSubmitModal }) {
             >
               Submit Company
             </button>
+
+            {/* User Profile / Login */}
+            {isAuthenticated ? (
+              <div className="flex items-center gap-3 ml-2 pl-2 border-l border-slate-300 dark:border-slate-600">
+                {user?.picture && (
+                  <img
+                    src={user.picture}
+                    alt={user.name}
+                    className="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-600"
+                  />
+                )}
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  {user?.name}
+                </span>
+                <button
+                  onClick={logout}
+                  className="text-sm text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="ml-2 px-5 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-all duration-200"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </div>

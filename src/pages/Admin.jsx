@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CompanyForm from '../components/CompanyForm';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Admin() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -41,14 +43,14 @@ function Admin() {
   const loadServices = async () => {
     try {
       // Load pending services
-      const pendingResponse = await fetch('http://localhost:5000/api/services/admin/pending');
+      const pendingResponse = await fetch(`${API_URL}/api/services/admin/pending`);
       const pendingData = await pendingResponse.json();
       if (pendingData.success) {
         setPendingServices(pendingData.data.map(s => ({ ...s, id: s._id })));
       }
 
       // Load all services
-      const allResponse = await fetch('http://localhost:5000/api/services/admin/all?approved=true');
+      const allResponse = await fetch(`${API_URL}/api/services/admin/all?approved=true`);
       const allData = await allResponse.json();
       if (allData.success) {
         setApprovedServices(allData.data.map(s => ({ ...s, id: s._id })));
@@ -66,7 +68,7 @@ function Admin() {
 
   const handleApprove = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/services/admin/${id}/approve`, {
+      const response = await fetch(`${API_URL}/api/services/admin/${id}/approve`, {
         method: 'PUT'
       });
 
@@ -89,7 +91,7 @@ function Admin() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/services/admin/${id}`, {
+      const response = await fetch(`${API_URL}/api/services/admin/${id}`, {
         method: 'DELETE'
       });
 
@@ -117,7 +119,7 @@ function Admin() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/services/admin/${id}`, {
+      const response = await fetch(`${API_URL}/api/services/admin/${id}`, {
         method: 'DELETE'
       });
 
@@ -138,7 +140,7 @@ function Admin() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/services/admin/${editingService.id}`, {
+      const response = await fetch(`${API_URL}/api/services/admin/${editingService.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

@@ -9,6 +9,7 @@ import AdminLogin from './pages/AdminLogin';
 import Quiz from './pages/Quiz';
 import Swipe from './pages/Swipe';
 import Matches from './pages/Matches';
+import Login from './pages/Login';
 
 function App() {
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/browse" element={<Browse />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/quiz" element={<Quiz />} />

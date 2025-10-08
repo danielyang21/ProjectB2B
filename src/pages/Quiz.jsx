@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMatch } from '../context/MatchContext';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Quiz() {
   const navigate = useNavigate();
   const { setUserPreferences, setMatchedCompanies } = useMatch();
@@ -79,7 +81,7 @@ function Quiz() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/ai/match-companies', {
+      const response = await fetch(`${API_URL}/api/ai/match-companies`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

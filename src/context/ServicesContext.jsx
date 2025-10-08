@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const ServicesContext = createContext();
-const API_URL = 'http://localhost:5000/api/services';
+const API_URL = `${import.meta.env.VITE_API_URL}/api/services`;
 
 export function ServicesProvider({ children }) {
   const [services, setServices] = useState([]);
